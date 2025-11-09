@@ -20,18 +20,76 @@
       color: var(--fg);
       font-family: system-ui, -apple-system, sans-serif;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
       height: 100vh;
+      overflow: hidden;
     }
-    .hero {
-      text-align: center;
+    .light-beam-container {
+      position: absolute;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      will-change: transform, opacity;
     }
+    .light-origin {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(2px);
+      box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7);
+      will-change: width, height, box-shadow;
+      transition: width 0.2s ease, height 0.2s ease;
+    }
+    .light-ray {
+      position: absolute;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%);
+      transform-origin: left center;
+      transform: translateY(-50%);
+      filter: blur(2px);
+      will-change: width, height, opacity;
+      transition: height 0.2s ease;
+    }
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      padding: 20px 40px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      flex: 1;
+    }
+    .left-side {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
+      padding: 0 40px;
+    }
+    .right-side {
+      width: 60%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1000px;
+    }
+
     h1 {
-      font-size: 48px;
+      font-size: 96px;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 16px;
       transition: text-shadow 0.25s ease;
+      margin-top: -100px;
     }
     h1:hover {
       text-shadow: 0 0 12px rgba(255,255,255,0.7);
@@ -39,43 +97,330 @@
     h2 {
       opacity: 0.6;
       font-weight: 400;
-      margin-bottom: 32px;
+      font-size: 32px;
+      margin-bottom: 48px;
+      max-width: 100%;
+      line-height: 1.3;
+    }
+    .links {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 40px;
     }
     .links a {
       color: var(--accent);
       text-decoration: none;
-      font-size: 18px;
-      margin: 0 16px;
+      font-size: 24px;
+      transition: all 0.3s ease;
     }
     .links a:hover {
       text-decoration: underline;
+      transform: translateY(-5px);
+    }
+    .cube {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      transform-style: preserve-3d;
+      transform: rotateX(-20deg) rotateY(-20deg);
+      transition: transform 0.5s ease;
+      cursor: grab;
+    }
+    .cube:active {
+      cursor: grabbing;
+    }
+    .cube-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1) inset;
+    }
+    .front {
+      transform: translateZ(200px);
+      background: rgba(100, 100, 255, 0.2);
+    }
+    .back {
+      transform: translateZ(-200px) rotateY(180deg);
+      background: rgba(255, 100, 100, 0.2);
+    }
+    .right {
+      transform: translateX(200px) rotateY(90deg);
+      background: rgba(100, 255, 100, 0.2);
+    }
+    .left {
+      transform: translateX(-200px) rotateY(-90deg);
+      background: rgba(255, 255, 100, 0.2);
+    }
+    .top {
+      transform: translateY(-200px) rotateX(90deg);
+      background: rgba(100, 255, 255, 0.2);
+    }
+    .bottom {
+      transform: translateY(200px) rotateX(-90deg);
+      background: rgba(255, 100, 255, 0.2);
     }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <h1>Oleg Rudenko</h1>
-    <h2>Software Engineer</h2>
-
+  <div class="light-beam-container">
+    <div class="light-origin"></div>
+    <div class="light-ray"></div>
+  </div>
+  <div class="header">
     <div class="links">
       <a href="mailto:olegrudenko033@gmail.com">email</a>
       <a href="https://t.me/smorsty" target="_blank">telegram</a>
-      <a href="CV.pdf" download>download CV (pdf)</a>
+      <a href="rudenko_oleg_CV.pdf" download>download CV (pdf)</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="left-side">
+      <h1>Oleg Rudenko</h1>
+      <h2></h2>
+      <!-- Hidden element to ensure light beam animation starts -->
+      <div id="start-animation" style="display: none;"></div>
+    </div>
+
+    <div class="right-side">
+      <div class="cube">
+        <div class="cube-face front">Golang</div>
+        <div class="cube-face back">Python</div>
+        <div class="cube-face right">Docker</div>
+        <div class="cube-face left">Kafka</div>
+        <div class="cube-face top">DataBases</div>
+        <div class="cube-face bottom">Cloud Billing</div>
+      </div>
     </div>
   </div>
   <script>
     const el = document.querySelector('h2');
-    const txt = 'Software Engineer';
+    const txt = 'Software Engineer at Yandex Cloud Billing';
     let i = 0;
     el.textContent = '';
     function type(){
       if(i < txt.length){
-        el.textContent += txt.charAt(i);
+        if(txt.charAt(i) === '\n') {
+          el.innerHTML += '<br>';
+        } else {
+          el.textContent += txt.charAt(i);
+        }
         i++;
-        setTimeout(type, 70);
+        setTimeout(type, 55);
       }
     }
     setTimeout(type, 400);
+
+    // Cube animation
+    const cube = document.querySelector('.cube');
+    const rightSide = document.querySelector('.right-side');
+    const lightBeamContainer = document.querySelector('.light-beam-container');
+    const lightOrigin = document.querySelector('.light-origin');
+    const lightRay = document.querySelector('.light-ray');
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetRotationX = -20;
+    let targetRotationY = -20;
+    let currentRotationX = -20;
+    let currentRotationY = -20;
+    let isDragging = false;
+    let previousMouseX = 0;
+    let previousMouseY = 0;
+    let autoRotate = true;
+    let windowHalfX = window.innerWidth / 2;
+    let windowHalfY = window.innerHeight / 2;
+
+    // Mouse move event - subtle response to cursor position
+    document.addEventListener('mousemove', event => {
+      if (!isDragging) {
+        mouseX = (event.clientX - windowHalfX) / 100;
+        mouseY = (event.clientY - windowHalfY) / 100;
+
+        // Update cube only when mouse is not over the cube area
+        if (!rightSide.contains(event.target) || !rightSide.contains(document.activeElement)) {
+          targetRotationX = -mouseY - 20;
+          targetRotationY = mouseX - 20;
+        }
+      }
+
+      // Update light beam position and angle
+      updateLightBeam(event);
+
+      // Add glow to the face closest to cursor
+      const faces = document.querySelectorAll('.cube-face');
+      faces.forEach(face => {
+        const rect = face.getBoundingClientRect();
+        const faceCenterX = rect.left + rect.width / 2;
+        const faceCenterY = rect.top + rect.height / 2;
+        const distance = Math.sqrt(
+          Math.pow(event.clientX - faceCenterX, 2) +
+          Math.pow(event.clientY - faceCenterY, 2)
+        );
+
+        // Make closest face more visible
+        const opacity = 1 - Math.min(distance / 1000, 0.5);
+        face.style.opacity = opacity;
+      });
+    });
+
+    // Cube drag events
+    cube.addEventListener('mousedown', event => {
+      isDragging = true;
+      autoRotate = false;
+      previousMouseX = event.clientX;
+      previousMouseY = event.clientY;
+      event.preventDefault();
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      setTimeout(() => {
+        autoRotate = true;
+      }, 2000); // Resume auto-rotation after 2 seconds
+    });
+
+    document.addEventListener('mousemove', event => {
+      if (isDragging) {
+        const deltaX = event.clientX - previousMouseX;
+        const deltaY = event.clientY - previousMouseY;
+
+        targetRotationY += deltaX * 0.5;
+        targetRotationX -= deltaY * 0.5;
+
+        previousMouseX = event.clientX;
+        previousMouseY = event.clientY;
+      }
+    });
+
+    // Light beam effect
+    function updateLightBeam(event) {
+      const mouseX = event.clientX;
+      const mouseY = event.clientY;
+
+      // Get cube position
+      const cubeRect = cube.getBoundingClientRect();
+      const cubeCenterX = cubeRect.left + cubeRect.width / 2;
+      const cubeCenterY = cubeRect.top + cubeRect.height / 2;
+
+      // Calculate angle between cube and mouse
+      const dx = mouseX - cubeCenterX;
+      const dy = mouseY - cubeCenterY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+      // Position the beam container at the cube center
+      lightBeamContainer.style.left = cubeCenterX + 'px';
+      lightBeamContainer.style.top = cubeCenterY + 'px';
+
+      // Set the ray length based on distance to mouse
+      const rayLength = Math.min(distance, 2000);
+      lightRay.style.width = rayLength + 'px';
+
+      // Rotate the container to point to the mouse
+      lightBeamContainer.style.transform = `rotate(${angle}deg)`;
+
+      // Calculate beam intensity based on distance and activity
+      const baseIntensity = isDragging ? 0.9 : 0.6;
+      const intensity = Math.max(0.2, Math.min(baseIntensity, 1 - distance / 2000));
+      lightBeamContainer.style.opacity = intensity;
+
+      // Add color variation with time
+      const time = Date.now();
+      // Change colors more dramatically when dragging
+      const speed = isDragging ? 30 : 50;
+      const hue = (time / speed) % 360;
+      const saturation = 70 + Math.sin(time / 500) * 10;
+      const lightness = isDragging ? 85 : 80;
+      const glowColor = `hsla(${hue}, ${saturation}%, ${lightness}%, ${intensity})`;
+
+      // Apply the glow effect
+      lightOrigin.style.boxShadow = `0 0 20px 10px ${glowColor}`;
+
+      // Set ray color to match origin
+      lightRay.style.background = `linear-gradient(90deg,
+        hsla(${hue}, ${saturation}%, ${lightness}%, ${intensity * 0.9}) 0%,
+        hsla(${hue}, ${saturation}%, ${lightness}%, 0) 100%)`;
+
+      // Make ray more visible when dragging
+      lightRay.style.opacity = isDragging ? 0.9 : 0.7;
+
+      // Add thickness variation to ray
+      const pulseSize = 2 + Math.sin(time / 200) * 1;
+      lightRay.style.height = `${pulseSize}px`;
+
+      // Add pulsating effect to the origin
+      const pulseOrigin = 6 + Math.sin(time / 300) * 2;
+      lightOrigin.style.width = `${pulseOrigin}px`;
+      lightOrigin.style.height = `${pulseOrigin}px`;
+    }
+
+    // Animation loop with smooth transitions
+    function animateCube() {
+      // Auto-rotation when not interacting
+      if (autoRotate) {
+        const time = Date.now() * 0.0005;
+        targetRotationX = Math.sin(time) * 25 - 20;
+        targetRotationY = Math.cos(time) * 25 - 20;
+      }
+
+      // Smooth transitions
+      currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+      currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+
+      cube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+
+      requestAnimationFrame(animateCube);
+    }
+
+    // Function to animate the light beam when not moving mouse
+    function animateLightBeam() {
+      if (!isDragging && !document.hasFocus()) return;
+
+      // Create synthetic mouse event at a position that moves in a circle
+      const time = Date.now() * 0.001;
+      const radius = 300;
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      // Calculate position in a figure-8 pattern
+      const x = centerX + Math.sin(time) * radius;
+      const y = centerY + Math.sin(time * 0.7) * Math.cos(time * 0.5) * radius / 1.5;
+
+      const syntheticEvent = {
+        clientX: x,
+        clientY: y
+      };
+
+      updateLightBeam(syntheticEvent);
+      requestAnimationFrame(animateLightBeam);
+    }
+
+    // Start animations
+    animateCube();
+    animateLightBeam();
+
+    // Trigger the light beam on page load
+    window.addEventListener('load', () => {
+      // Create a starting event at the center of the screen
+      const startEvent = {
+        clientX: window.innerWidth / 2,
+        clientY: window.innerHeight / 2
+      };
+
+      updateLightBeam(startEvent);
+
+      // Make sure the beam is visible
+      lightBeamContainer.style.opacity = 0.7;
+    });
   </script>
 </body>
 </html>

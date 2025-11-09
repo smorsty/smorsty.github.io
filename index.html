@@ -102,35 +102,6 @@
       max-width: 100%;
       line-height: 1.3;
     }
-    .restart-button {
-      position: relative;
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 25px;
-      background: rgba(100, 150, 255, 0.2);
-      color: var(--accent);
-      font-size: 18px;
-      cursor: pointer;
-      border-radius: 4px;
-      opacity: 0;
-      transform: translateY(-50px);
-      transition: opacity 0.5s ease, transform 0.5s ease, background 0.3s ease;
-    }
-    .restart-button.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .restart-button:hover {
-      background: rgba(100, 150, 255, 0.3);
-    }
-    .restart-button.falling {
-      animation: falling 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
-    }
-    @keyframes falling {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      20% { transform: translateY(5px) rotate(5deg); opacity: 1; }
-      100% { transform: translateY(40px) rotate(15deg); opacity: 0; }
-    }
     .links {
       display: flex;
       flex-direction: row;
@@ -216,7 +187,6 @@
     <div class="left-side">
       <h1>Oleg Rudenko</h1>
       <h2></h2>
-      <button class="restart-button" id="restart-button">Reprint</button>
       <!-- Hidden element to ensure light beam animation starts -->
       <div id="start-animation" style="display: none;"></div>
     </div>
@@ -237,22 +207,15 @@
     const txt = 'Software Engineer at Yandex Cloud Billing';
     let i = 0;
     el.textContent = '';
-    const restartButton = document.getElementById('restart-button');
-
     function type(){
       if(i < txt.length){
         if(txt.charAt(i) === '\n') {
           el.innerHTML += '<br>';
         } else {
-          el.innerHTML += txt.charAt(i);
+          el.textContent += txt.charAt(i);
         }
         i++;
         setTimeout(type, 55);
-      } else {
-        // Show restart button with a delay after typing is complete
-        setTimeout(() => {
-          restartButton.classList.add('visible');
-        }, 800);
       }
     }
     setTimeout(type, 400);
@@ -399,26 +362,6 @@
       lightOrigin.style.width = `${pulseOrigin}px`;
       lightOrigin.style.height = `${pulseOrigin}px`;
     }
-
-    // Function to restart the typing animation
-    function restartTyping() {
-      // Animate button falling
-      restartButton.classList.add('falling');
-
-      // Hide restart button and reset typing
-      setTimeout(() => {
-        restartButton.classList.remove('visible');
-        restartButton.classList.remove('falling');
-
-        // Reset typing
-        i = 0;
-        el.innerHTML = '';
-        setTimeout(type, 400);
-      }, 600);
-    }
-
-    // Add event listener to restart button
-    restartButton.addEventListener('click', restartTyping);
 
     // Animation loop with smooth transitions
     function animateCube() {

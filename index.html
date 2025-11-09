@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Олег Руденко — Software Engineer</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --fg: #e9e9e9;
+      --accent: #ffffff;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .hero {
+      text-align: center;
+    }
+    h1 {
+      font-size: 48px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      transition: text-shadow 0.25s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 12px rgba(255,255,255,0.7);
+    }
+    h2 {
+      opacity: 0.6;
+      font-weight: 400;
+      margin-bottom: 32px;
+    }
+    .links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 18px;
+      margin: 0 16px;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>Олег Руденко</h1>
+    <h2>Software Engineer</h2>
+
+    <div class="links">
+      <a href="mailto:olegrudenko033@gmail.com">email</a>
+      <a href="https://t.me/smorsty" target="_blank">telegram</a>
+      <a href="CV.pdf" download>download CV (pdf)</a>
+    </div>
+  </div>
+  <script>
+    const el = document.querySelector('h2');
+    const txt = 'Software Engineer';
+    let i = 0;
+    el.textContent = '';
+    function type(){
+      if(i < txt.length){
+        el.textContent += txt.charAt(i);
+        i++;
+        setTimeout(type, 70);
+      }
+    }
+    setTimeout(type, 400);
+  </script>
+</body>
+</html>
